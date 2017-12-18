@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,16 +8,18 @@ namespace DataStructures {
   class Program {
     static void Main(string[] args) {
 
-      var list = new DuoLinkedList();
+      var list = new Queue();
       for (int i = 0; i < 15; i++) {
-        list.AddLast(i * 10);
+        list.Enqueue(i * 10);
       }
 
-      //var node = list.Find(140);
-      //list.Insert(node, 777);
+      Console.Clear();
+      while (list.Count > 0) {
+        Console.WriteLine(list.Dequeue());
+      }
 
-      foreach (var item in list)
-        Console.WriteLine(item);
+      //foreach (var item in list)
+      //  Console.WriteLine(item);
 
     }
   }
