@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using DataStructures.Interfaces;
+using System;
 
 namespace DataStructures {
 
-  public class Queue : ICollection {
+  public class Queue : System.Collections.ICollection, ICollection, IPeekedCollection {
 
     private readonly object syncRoot = new object();
     private DuoLinkedList innerList = new DuoLinkedList();
@@ -14,19 +14,11 @@ namespace DataStructures {
 
     public bool IsSynchronized => false;
 
-    public void CopyTo(Array array, int index) {
+    public void CopyTo(Array array, int index) => innerList.CopyTo(array, index);
 
-      innerList.CopyTo(array, index);
-    }
+    public System.Collections.IEnumerator GetEnumerator() => innerList.GetEnumerator();
 
-    public IEnumerator GetEnumerator() {
-      return innerList.GetEnumerator();
-    }
-
-    public void Enqueue(object value) {
-
-      innerList.AddLast(value);
-    }
+    public void Enqueue(object value) => innerList.AddLast(value);
 
     public object Dequeue() {
 
@@ -67,19 +59,10 @@ namespace DataStructures {
       return false;
     }
 
-    public void Clear() {
+    public void Clear() => innerList.Clear();
 
-      innerList.Clear();
-    }
+    public bool Contains(object value) => innerList.Contains(value);
 
-    public bool Contains(object value) {
-
-      return innerList.Contains(value);
-    }
-
-    public object[] ToArray() {
-
-      return innerList.ToArray();
-    }
+    public object[] ToArray() => innerList.ToArray();
   }
 }

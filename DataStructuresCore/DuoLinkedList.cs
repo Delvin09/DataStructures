@@ -1,8 +1,10 @@
-﻿namespace DataStructures {
+﻿using DataStructures.Interfaces;
 
-  public class DuoNode : Node {
+namespace DataStructures {
 
-    public Node Prev {
+  public class DuoNode : Node, IDuoLinkedNode {
+
+    public ILinkedNode Prev {
       get; set;
     }
 
@@ -10,16 +12,16 @@
       : base(value) {
     }
 
-    public DuoNode(object value, Node prev, Node next) : base(value, next) {
+    public DuoNode(object value, ILinkedNode prev, ILinkedNode next) : base(value, next) {
       this.Prev = prev;
     }
   }
 
-  public class DuoLinkedList : LinkedList {
+  public class DuoLinkedList : LinkedList, IDuoLinkedList {
 
-    public Node Last {
+    public ILinkedNode Last {
       get;
-      set;
+      private set;
     }
 
     public override void Clear() {
@@ -28,15 +30,13 @@
       base.Clear();
     }
 
-    protected override Node CreateNode(object value, Node prev = null, Node next = null) {
+    protected override ILinkedNode CreateNode(object value, ILinkedNode prev = null, ILinkedNode next = null)
+      => new DuoNode(value, prev, next);
 
-      return new DuoNode(value, prev, next);
-    }
-
-    protected override void RemoveNodeInternal(Node nodeToRemove, Node previosNode) {
+    protected override void RemoveNodeInternal(ILinkedNode nodeToRemove, ILinkedNode previosNode) {
 
       base.RemoveNodeInternal(nodeToRemove, previosNode);
-      var nextNode = (DuoNode)nodeToRemove.Next;
+      var nextNode = (IDuoLinkedNode)nodeToRemove.Next;
       if (previosNode == null && nextNode != null)
         nextNode.Prev = null;
 
@@ -49,11 +49,11 @@
         nextNode.Prev = previosNode;
     }
 
-    protected override Node AddInternal(object value, Node prev, Node next) {
+    protected override ILinkedNode AddInternal(object value, ILinkedNode prev, ILinkedNode next) {
 
-      var newNode = (DuoNode)base.AddInternal(value, prev, next);
+      var newNode = (IDuoLinkedNode)base.AddInternal(value, prev, next);
       if (next != null)
-        ((DuoNode)next).Prev = newNode;
+        ((IDuoLinkedNode)next).Prev = newNode;
       else
         Last = newNode;
       return newNode;

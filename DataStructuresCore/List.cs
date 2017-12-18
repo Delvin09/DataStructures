@@ -3,28 +3,20 @@ using System.Collections;
 
 namespace DataStructures {
 
-  public class List : IList {
+  public class List : IList, Interfaces.IList {
 
     private class ListEnumerator : IEnumerator {
 
       private readonly List list;
       private int currentIndex = -1;
 
-      public ListEnumerator(List list) {
-        this.list = list;
-      }
+      public ListEnumerator(List list) => this.list = list;
 
       public object Current => list[currentIndex];
 
-      public bool MoveNext() {
+      public bool MoveNext() => ++currentIndex < list.Count;
 
-        return ++currentIndex < list.Count;
-      }
-
-      public void Reset() {
-
-        currentIndex = -1;
-      }
+      public void Reset() => currentIndex = -1;
     }
 
     private object[] innerArray;
@@ -39,7 +31,14 @@ namespace DataStructures {
       innerArray = new object[capacity];
     }
 
-    public object this[int index] { get => innerArray[index]; set => innerArray[index] = value; }
+    public object this[int index] {
+      get {
+        return innerArray[index];
+      }
+      set {
+        innerArray[index] = value;
+      }
+    }
 
     public bool IsReadOnly => false;
 
@@ -70,10 +69,7 @@ namespace DataStructures {
       innerArray = new object[origCapacity];
     }
 
-    public bool Contains(object value) {
-
-      return IndexOf(value) >= 0;
-    }
+    public bool Contains(object value) => IndexOf(value) >= 0;
 
     public void CopyTo(Array array, int index) {
 
@@ -81,9 +77,7 @@ namespace DataStructures {
         array.SetValue(innerArray[innerIndex], index);
     }
 
-    public IEnumerator GetEnumerator() {
-      return new ListEnumerator(this);
-    }
+    public IEnumerator GetEnumerator() => new ListEnumerator(this);
 
     public int IndexOf(object value) {
 
@@ -153,6 +147,7 @@ namespace DataStructures {
     }
 
     private void GrowingArray() {
+
       if (Capacity == Count) {
         var newArray = new object[(Capacity / 2) + Capacity];
         for (int i = 0; i < innerArray.Length; i++)

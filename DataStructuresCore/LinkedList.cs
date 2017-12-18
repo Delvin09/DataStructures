@@ -1,33 +1,35 @@
-﻿using System;
-using System.Collections;
+﻿using DataStructures.Interfaces;
+using System;
 
 namespace DataStructures {
 
-  public class Node {
+  public class Node : ILinkedNode {
 
-    public Node Next {
+    public ILinkedNode Next {
       get; set;
     }
 
-    public readonly object Value;
+    public object Value {
+      get; private set;
+    }
 
     public Node(object value) : this(value, null) {
     }
 
-    public Node(object value, Node next) {
+    public Node(object value, ILinkedNode next) {
       Next = next;
       Value = value;
     }
   }
 
-  public class LinkedList : ICollection {
+  public class LinkedList : System.Collections.ICollection, ILinkedList {
 
-    private class LinkedListEnumerator : IEnumerator {
+    private class LinkedListEnumerator : System.Collections.IEnumerator {
 
-      private readonly Node firstNode;
-      private Node currentNode;
+      private readonly ILinkedNode firstNode;
+      private ILinkedNode currentNode;
 
-      public LinkedListEnumerator(Node node) {
+      public LinkedListEnumerator(ILinkedNode node) {
 
         firstNode = node;
       }
@@ -47,7 +49,7 @@ namespace DataStructures {
 
     private readonly object syncRoot = new object();
 
-    public Node First {
+    public ILinkedNode First {
       get; protected set;
     }
 
@@ -66,10 +68,7 @@ namespace DataStructures {
         array.SetValue(current.Value, index);
     }
 
-    public IEnumerator GetEnumerator() {
-
-      return new LinkedListEnumerator(First);
-    }
+    public System.Collections.IEnumerator GetEnumerator() => new LinkedListEnumerator(First);
 
     public virtual void Clear() {
 
@@ -77,12 +76,9 @@ namespace DataStructures {
       Count = 0;
     }
 
-    protected virtual Node CreateNode(object value, Node prev, Node next) {
+    protected virtual ILinkedNode CreateNode(object value, ILinkedNode prev, ILinkedNode next) => new Node(value, next);
 
-      return new Node(value, next);
-    }
-
-    protected virtual Node AddInternal(object value, Node prev, Node next) {
+    protected virtual ILinkedNode AddInternal(object value, ILinkedNode prev, ILinkedNode next) {
 
       var newNode = CreateNode(value, prev, next);
       if (prev != null)
@@ -91,7 +87,7 @@ namespace DataStructures {
       return newNode;
     }
 
-    public Node Insert(Node node, object value) {
+    public ILinkedNode Insert(ILinkedNode node, object value) {
 
       return AddInternal(value, prev: node, next: node.Next);
     }
@@ -113,47 +109,37 @@ namespace DataStructures {
       }
     }
 
-    public void RemoveFirst() {
-
-      RemoveNodeInternal(First, null);
-    }
+    public void RemoveFirst() => RemoveNodeInternal(First, null);
 
     public void RemoveLast() {
 
-      Node last = First;
+      var last = First;
       if (last != null) {
-        Node lastPrevios = null;
+        ILinkedNode lastPrevios = null;
         while (last.Next != null) {
           lastPrevios = last;
           last = last.Next;
         }
-
         RemoveNodeInternal(last, lastPrevios);
       }
     }
 
-    public bool Remove(object value) {
+    public bool Remove(object value) => Remove(node => node.Value.Equals(value));
 
-      return Remove(node => node.Value.Equals(value));
-    }
+    public void Remove(ILinkedNode node) => Remove(currentNode => currentNode == node);
 
-    public void Remove(Node node) {
-
-      Remove(currentNode => currentNode == node);
-    }
-
-    private bool Remove(Predicate<Node> predicate) {
+    private bool Remove(Predicate<ILinkedNode> predicate) {
 
       if (First == null)
         return false;
 
-      if (predicate(First)){
+      if (predicate(First)) {
         RemoveFirst();
         return true;
       }
       else {
         var current = First.Next;
-        Node prev = First;
+        var prev = First;
         do {
           if (predicate(current)) {
             RemoveNodeInternal(current, prev);
@@ -166,7 +152,7 @@ namespace DataStructures {
       return false;
     }
 
-    protected virtual void RemoveNodeInternal(Node nodeToRemove, Node previosNode) {
+    protected virtual void RemoveNodeInternal(ILinkedNode nodeToRemove, ILinkedNode previosNode) {
 
       if (nodeToRemove == null)
         throw new ArgumentNullException(nameof(nodeToRemove));
@@ -179,10 +165,10 @@ namespace DataStructures {
       Count--;
     }
 
-    public Node Find(object value) {
+    public ILinkedNode Find(object value) {
 
       if (First != null) {
-        Node current = First;
+        var current = First;
         do {
           if (current.Value.Equals(value))
             return current;
@@ -191,15 +177,12 @@ namespace DataStructures {
       return null;
     }
 
-    public bool Contains(object value) {
-
-      return Find(value) != null;
-    }
+    public bool Contains(object value) => Find(value) != null;
 
     public object[] ToArray() {
 
       var result = new object[Count];
-      Node current = First;
+      var current = First;
       for (int i = 0; i < Count; i++, current = current.Next)
         result[i] = current.Value;
       return result;

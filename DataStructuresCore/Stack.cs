@@ -1,9 +1,18 @@
-﻿using System;
-using System.Collections;
+﻿using DataStructures.Interfaces;
+using System;
 
 namespace DataStructures {
 
-  public class Stack : ICollection {
+  // IEnumerable -> ICollection    -> IDictionary    -> DictionaryBase
+  //                                                 -> Hashtable
+  //                                                 -> SortedList
+  //                               -> IList          -> ArrayList
+  //             -> IEnumerable<T> -> ICollection<T> -> IDictionary<TKey, TValue> -> Dictionary<TKey, TValue> (SortedList, SortedDictionary)
+  //                                                 -> IList<T>                  -> List<T>
+  //                                                 -> ISet<T>                   -> HashSet<T>
+  //              
+
+  public class Stack : ICollection, System.Collections.ICollection, IPeekedCollection {
 
     private readonly object syncObject = new object();
     private LinkedList innerList = new LinkedList();
@@ -16,7 +25,7 @@ namespace DataStructures {
 
     public void CopyTo(Array array, int index) => innerList.CopyTo(array, index);
 
-    public IEnumerator GetEnumerator() => innerList.GetEnumerator();
+    public System.Collections.IEnumerator GetEnumerator() => innerList.GetEnumerator();
 
     public void Clear() => innerList.Clear();
 
@@ -37,6 +46,16 @@ namespace DataStructures {
         throw new InvalidOperationException();
 
       return innerList.First.Value;
+    }
+
+    public bool TryPeek(out object result) {
+
+      result = null;
+      if (Count > 0) {
+        result = Peek();
+        return true;
+      }
+      return false;
     }
 
     public void Push(object value) => innerList.AddFirst(value);
