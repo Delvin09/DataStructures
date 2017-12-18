@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ConsoleApplication5 {
+namespace DataStructures {
+
   public class List : IList {
 
     private class ListEnumerator : IEnumerator {
