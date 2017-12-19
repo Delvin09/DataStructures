@@ -53,6 +53,10 @@
       <Project>{5fad5735-ee71-43d3-8e50-bcbf38a6bc80}</Project>
       <Name>DataStructuresCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataStrucures.Interfaces\DataStrucures.Interfaces.csproj">
+      <Project>{c5127ab3-1f98-420e-94ba-104d4ac4a617}</Project>
+      <Name>DataStrucures.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

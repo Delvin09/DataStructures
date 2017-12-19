@@ -1,15 +1,20 @@
-﻿namespace DataStructures.Interfaces {
-  public interface IBinaryTreeNode {
-    IBinaryTreeNode Left { get; }
-    IBinaryTreeNode Right { get; }
-    object Value { get; }
+﻿using System;
+
+namespace DataStructures.Interfaces {
+  public interface IBinaryTreeNode : IComparable {
+    IBinaryTreeNode Left {
+      get; set;
+    }
+    IBinaryTreeNode Right {
+      get; set;
+    }
+    IComparable Value { get; }
   }
 
   public interface IBinaryTree : ICollection {
     IBinaryTreeNode Root { get; }
-    IBinaryTreeNode Add(object value);
-    void Remove(object value);
-    void Remove(IBinaryTreeNode value);
-    IBinaryTreeNode Find(object value);
+    IBinaryTreeNode Add(IComparable value);
+    void Remove(IComparable value);
+    IBinaryTreeNode Find(IComparable value);
   }
 }

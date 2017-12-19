@@ -8,18 +8,17 @@ namespace DataStructures {
   class Program {
     static void Main(string[] args) {
 
-      var list = new Queue();
-      for (int i = 0; i < 15; i++) {
-        list.Enqueue(i * 10);
-      }
+      var arr = new int[] { 5, 2, 3, 1, 8, 10, 7 };
+      var tree = new BinaryTree();
+      foreach (var item in arr)
+        tree.Add(item);
 
-      Console.Clear();
-      while (list.Count > 0) {
-        Console.WriteLine(list.Dequeue());
-      }
+      var r = tree.Find(100);
 
-      //foreach (var item in list)
-      //  Console.WriteLine(item);
+      foreach (var item in tree.ToArray()) {
+        Console.Write(item + ", ");
+      }
+      Console.WriteLine();
     }
   }
 }
