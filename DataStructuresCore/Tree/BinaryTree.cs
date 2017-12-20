@@ -37,20 +37,7 @@ namespace DataStructures {
     }
   }
 
-  public class BinaryTree : IBinaryTree, System.Collections.ICollection {
-
-    private class BinaryTreeEnumerator : System.Collections.IEnumerator {
-
-      public object Current => throw new NotImplementedException();
-
-      public bool MoveNext() {
-        throw new NotImplementedException();
-      }
-
-      public void Reset() {
-        throw new NotImplementedException();
-      }
-    }
+  public partial class BinaryTree : IBinaryTree, System.Collections.ICollection {
 
     private enum TreeState {
       None,
@@ -117,9 +104,7 @@ namespace DataStructures {
       return current;
     }
 
-    public System.Collections.IEnumerator GetEnumerator() {
-      throw new NotImplementedException();
-    }
+    public System.Collections.IEnumerator GetEnumerator() => new BinaryTreeEnumerator(Root);
 
     public void Remove(IComparable value) {
 
