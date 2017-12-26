@@ -46,6 +46,7 @@
     <Compile Include="IList.cs" />
     <Compile Include="IBinaryTree.cs" />
     <Compile Include="IPeekedCollection.cs" />
+    <Compile Include="ISet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
