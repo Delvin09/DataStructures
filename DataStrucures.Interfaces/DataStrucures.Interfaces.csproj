@@ -45,6 +45,7 @@
     <Compile Include="ILinkedList.cs" />
     <Compile Include="IList.cs" />
     <Compile Include="IBinaryTree.cs" />
+    <Compile Include="IMap.cs" />
     <Compile Include="IPeekedCollection.cs" />
     <Compile Include="ISet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -8,7 +8,6 @@ namespace DataStructures {
   class Program {
     static void Main(string[] args) {
 
-
       var hash = new object().GetHashCode();
       var r1 = hash % 5;
       var r2 = hash % 10;

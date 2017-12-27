@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Map.cs" />
     <Compile Include="Set.cs" />
     <Compile Include="Tree\BinaryTree.cs" />
     <Compile Include="DuoLinkedList.cs" />
