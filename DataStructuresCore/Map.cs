@@ -45,6 +45,24 @@ namespace DataStructures {
       public int GetHash(object key) => key.GetHashCode();
     }
 
+    private class MapEnumerator : System.Collections.IEnumerator {
+
+      private readonly KeyValue[] arr;
+      private readonly int count;
+      private int currentIndex = -1;
+
+      public MapEnumerator(KeyValue[] arr, int count) {
+        this.arr = arr;
+        this.count = count;
+      }
+
+      public object Current => arr[currentIndex];
+
+      public bool MoveNext() => ++currentIndex < count;
+
+      public void Reset() => currentIndex = -1;
+    }
+
     private const int InitCapacity = 10;
     public static readonly IMapKeyComparer DefaultComparer = new MapKeyDefaultComparer();
 
@@ -69,7 +87,53 @@ namespace DataStructures {
     }
 
     public void Add(object key, object value) {
-      throw new NotImplementedException();
+
+      if (key == null)
+        throw new ArgumentNullException(nameof(key));
+
+      if (ContainsKey(key))
+        throw new ArgumentException($"Key with value {key} is exists", nameof(key));
+
+      if (Count == bank.Length)
+        GrowBankSize();
+      InsertToBank(key, value);
+      Count++;
+    }
+
+    private void GrowBankSize() {
+      var newBank = new KeyValue[bank.Length * 2];
+      for (int i = 0; i < bank.Length; i++)
+        newBank[i] = bank[i];
+      bank = newBank;
+    }
+
+    private void InsertToBank(object key, object value) {
+
+      Search(key, out int index);
+      var item = bank[index];
+      bank[index++] = new KeyValue(key, value);
+      for (; index <= Count; index++) {
+        var item2 = bank[index];
+        bank[index] = item;
+        item = item2;
+      }
+    }
+
+    private bool Search(object key, out int index) {
+
+      index = -1;
+      int begin = 0;
+      int end = Count - 1;
+      while (begin <= end && begin >= 0 && end < Count) {
+        int middle = index = ((end - begin) / 2) + begin;
+        if (comparer.Compare(bank[middle], key) > 0) // берем меньшую часть
+          end = middle - 1;
+        else if (comparer.Compare(bank[middle], key) < 0) // берем большую часть
+          begin = middle + 1;
+        else
+          return true;
+      }
+      return false;
     }
 
     public void Clear() {
@@ -77,28 +141,50 @@ namespace DataStructures {
       bank = new KeyValue[InitCapacity];
     }
 
-    public bool ContainsKey(object key) {
-      throw new NotImplementedException();
-    }
+    public bool ContainsKey(object key) => key != null && Search(key, out int index);
 
     public bool Remove(object key) {
-      throw new NotImplementedException();
+
+      if (key == null)
+        throw new ArgumentNullException(nameof(key));
+
+      if (!Search(key, out int index))
+        return false;
+
+      Count--;
+      for (; index < Count; index++)
+        bank[index] = bank[index + 1];
+      return true;
     }
 
     public bool TryGetValue(object key, out object value) {
-      throw new NotImplementedException();
+
+      value = null;
+      if (key == null || !ContainsKey(key))
+        return false;
+
+      value = this[key];
+      return true;
     }
 
-    public System.Collections.IEnumerator GetEnumerator() {
-      throw new NotImplementedException();
-    }
+    public System.Collections.IEnumerator GetEnumerator() => new MapEnumerator(bank, Count);
 
     bool ICollection.Contains(object value) {
-      throw new NotImplementedException();
+
+      if (ContainsKey(value))
+        return true;
+      foreach (var item in bank) {
+        if (item.Value == value || ReferenceEquals(item.Value, value) || item.Value.Equals(value))
+          return true;
+      }
+      return false;
     }
 
     object[] ICollection.ToArray() {
-      throw new NotImplementedException();
+
+      object[] result = new object[Count];
+      Array.Copy(bank, result, Count);
+      return result;
     }
   }
 }
