@@ -1,2 +1,2 @@
 # DataStructures
-Examples of data structures in C# for studens
+Examples of data structures in C# for the studens
